@@ -1,0 +1,33 @@
+name: Build
+
+on:
+  push:
+    branches:
+      - master
+
+jobs:
+  build:
+    name: Build and analyze
+    runs-on: ubuntu-latest
+    
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0  # Shallow clones should be disabled for a better relevancy of analysis
+      - name: Add SonarQube Self-Signed Cert to Java Keystore
+        run: |
+          echo "${{ secrets.SONAR_CA_CERT }}" | base64 -d > sonarqube.crt
+          
+          keytool -import -keystore custom_truststore -storepass sonarsecret -noprompt -alias sonarqube_custom -file sonarqube.crt
+          
+          echo "CUSTOM_TRUSTSTORE_PATH=$GITHUB_WORKSPACE/custom_truststore" >> $GITHUB_ENV
+          echo "CUSTOM_TRUSTSTORE_PASS=sonarsecret" >> $GITHUB_ENV
+
+      - uses: SonarSource/sonarqube-scan-action@v6
+        env:
+          SONAR_TOKEN: ${{ secrets.SONAR_TOKEN }}
+          SONAR_HOST_URL: ${{ secrets.SONAR_HOST_URL }}
+          SONAR_SCANNER_OPTS: "-Djavax.net.ssl.trustStore=${{ env.CUSTOM_TRUSTSTORE_PATH }} -Djavax.net.ssl.trustStorePassword=${{ env.CUSTOM_TRUSTSTORE_PASS }} -Dsvnkit.http.ssl.hostnameVerifier=ALLOW_ALL"
+        with:
+          args: >
+            -Dsonar.projectBaseDir=.
