@@ -1,4 +1,4 @@
-name: Build
+name: Analyze
 
 on:
   push:
@@ -6,8 +6,8 @@ on:
       - master
 
 jobs:
-  build:
-    name: Build and analyze
+  analyze:
+    name: Analyze code with sonarqube
     runs-on: ubuntu-latest
     
     steps:

@@ -1,0 +1,61 @@
+name: Build
+
+on: 
+  workflow_run:
+    workflows: ["Analyze"]
+    types:
+      - completed
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    permissions:
+      contents: 'read'
+      id-token: 'write'
+
+    steps:
+      - name : Check out repository code
+        uses: actions/checkout@v4
+
+      - name: Azure Login
+        uses: Azure/login@v2.3.0
+        with:
+          client-id: ${{ secrets.AZURE_CLIENT_ID }}
+          tenant-id: ${{ secrets.AZURE_TENANT_ID }}
+          subscription-id: ${{ secrets.AZURE_SUBSCRIPTION_ID }}
+
+      - name: 'Run Azure CLI commands'
+        run: |
+          az account show
+          az group list
+          pwd
+          az acr login --name jibaek
+
+      - name: Set up Docker Buildx
+        uses: docker/setup-buildx-action@v3
+
+      # - name: Configure Docker to use Artifact Registry
+      #   run: gcloud auth configure-docker ${{ env.GAR_LOCATION }}-docker.pkg.dev
+
+      # - name: Set short git commit SHA
+      #   id: vars
+      #   run: |
+      #     calculatedSha=$(git rev-parse --short ${{ github.sha }})
+      #     echo "COMMIT_SHORT_SHA=$calculatedSha" >> $GITHUB_ENV
+
+      # - name: Build and push Docker image to Artifact Registry
+      #   uses: docker/build-push-action@v5
+      #   env:
+      #     GOOGLE_APPLICATION_CREDENTIALS: ${{ steps.auth.outputs.credentials_file_path }}
+
+      #   with:
+      #     context: .
+      #     file: ./Dockerfile
+      #     platforms: linux/amd64
+      #     push: true
+      #     tags: ${{ env.GAR_LOCATION }}-docker.pkg.dev/${{ env.PROJECT_ID }}/${{ env.REPOSITORY_NAME }}/${{ env.IMAGE_NAME }}:${{ env.COMMIT_SHORT_SHA }}
+      #     no-cache: true
+
+      # - name: Finish Image Publish
+      #   run: |
+      #     echo "🎉 Finish Image Publish!!! 🎉"
