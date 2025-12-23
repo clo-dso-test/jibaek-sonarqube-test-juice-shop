@@ -19,7 +19,7 @@ jobs:
         uses: actions/checkout@v4
         with:
           repository: clo-dso-test/jibaek-infra
-          ssh-key: ${{ secret.INFRA_GIT_PRIV_KEY }}
+          ssh-key: ${{ secrets.INFRA_GIT_PRIV_KEY }}
           ref: main
 
       - name: Set short git commit SHA
