@@ -20,19 +20,18 @@ jobs:
       id-token: 'write'
 
     steps:
+      - name: Set short git commit SHA
+        id: vars
+        run: |
+          calculatedSha=$(git rev-parse --short ${{ github.sha }})
+          echo "COMMIT_SHORT_SHA=$calculatedSha" >> $GITHUB_ENV
+
       - name : Check out repository code
         uses: actions/checkout@v4
         with:
           repository: clo-dso-test/jibaek-infra
           token: ${{ secrets.INFRA_REPO_TOKEN }}
           path: main
-
-      - name: Set short git commit SHA
-        id: vars
-        run: |
-          calculatedSha=$(git rev-parse --short ${{ github.sha }})
-          echo "COMMIT_SHORT_SHA=$calculatedSha" >> $GITHUB_ENV
-        working-directory: jibaek-infra
 
       - name: Update Image SHA with yq
         run: |
