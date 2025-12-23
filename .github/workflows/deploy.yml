@@ -1,11 +1,9 @@
+name: Deploy
 # Trigger Condition For Testing:
-# name: Deploy
-
 # on:
 #   push:
 #     branches:
 #       - master
-
 on: 
   workflow_run:
     workflows: ["Build"]
@@ -35,7 +33,7 @@ jobs:
 
       - name: Update Image SHA with yq
         run: |
-          FILE_PATH="jibaek-infra/juice-shop/juice-shop.yaml"
+          FILE_PATH="jibaek-infra/juice-shop/juice-shop-pod.yaml"
           yq -i ".spec.containers[0].image = \"jibaek.azurecr.io/jibaek-sonarqube-test-juice-shop/jibaek-sonarqube-test-juice-shop:${{ env.COMMIT_SHORT_SHA }}\"" $FILE_PATH
           cat $FILE_PATH
     
