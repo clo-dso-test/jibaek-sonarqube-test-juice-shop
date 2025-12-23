@@ -48,7 +48,7 @@ jobs:
           push: true
           tags: ${{ vars.ACR_PATH }}/${{ github.event.repository.name }}/${{ github.event.repository.name }}:${{ env.COMMIT_SHORT_SHA }}
           no-cache: true
-
+      
       - name: Finish Image Publish
         run: |
           echo "🎉 Finish Image Publish!!! 🎉"

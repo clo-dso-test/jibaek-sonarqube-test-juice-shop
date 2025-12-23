@@ -1,0 +1,37 @@
+name: Deploy
+
+on: 
+  workflow_run:
+    workflows: ["Build"]
+    types:
+      - completed
+
+jobs:
+  build:
+    name: DockerX build
+    runs-on: ubuntu-latest
+    permissions:
+      contents: 'read'
+      id-token: 'write'
+
+    steps:
+      - name : Check out repository code
+        uses: actions/checkout@v4
+        with:
+          repository: clo-dso-test/jibaek-infra
+          ssh-key: ${{ secret.INFRA_GIT_PRIV_KEY }}
+          ref: main
+
+      - name: Set short git commit SHA
+        id: vars
+        run: |
+          calculatedSha=$(git rev-parse --short ${{ github.sha }})
+          echo "COMMIT_SHORT_SHA=$calculatedSha" >> $GITHUB_ENV
+
+      # - uses: chrisdickinson/setup-yq@latest
+
+      
+    
+      - name: Finish Image Deploy to Infra Repo
+        run: |
+          echo "🎉 Finish Image Deploy to Infra Repo!!! 🎉"
