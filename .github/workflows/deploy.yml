@@ -1,15 +1,16 @@
-name: Deploy
+# Trigger Condition For Testing:
+# name: Deploy
 
-on:
-  push:
-    branches:
-      - master
+# on:
+#   push:
+#     branches:
+#       - master
 
-# on: 
-#   workflow_run:
-#     workflows: ["Build"]
-#     types:
-#       - completed
+on: 
+  workflow_run:
+    workflows: ["Build"]
+    types:
+      - completed
 
 jobs:
   build:
