@@ -33,7 +33,7 @@ jobs:
 
       - name: Update Image SHA with yq
         run: |
-          FILE_PATH="jibaek-infra/juice-shop/juice-shop-pod.yaml"
+          FILE_PATH="jibaek-infra/juice-shop/juice-shop-deployment.yaml"
           yq -i ".spec.containers[0].image = \"jibaek.azurecr.io/jibaek-sonarqube-test-juice-shop/jibaek-sonarqube-test-juice-shop:${{ env.COMMIT_SHORT_SHA }}\"" $FILE_PATH
           cat $FILE_PATH
     
@@ -42,7 +42,7 @@ jobs:
           cd jibaek-infra/juice-shop
           git config --global user.name "github-actions[bot]"
           git config --global user.email "github-actions[bot]@users.noreply.github.com"
-          git add juice-shop-pod.yaml
+          git add juice-shop-deployment.yaml
           git commit -m "chore: update juice-shop image sha to ${{ env.COMMIT_SHORT_SHA }}"
           git push origin main
 
