@@ -8,8 +8,11 @@ on:
 
 jobs:
   build:
-    name: DockerX build
+    name: DockerX build and wiz CLI scan
     runs-on: ubuntu-latest
+    env:
+      SCAN_PATH: "."
+      POLICY: "Default vulnerabilities policy"
     permissions:
       contents: 'read'
       id-token: 'write'
@@ -40,7 +43,6 @@ jobs:
 
       - name: Build and push Docker image to Artifact Registry
         uses: docker/build-push-action@v5
-
         with:
           context: .
           file: ./Dockerfile
@@ -48,6 +50,18 @@ jobs:
           push: true
           tags: ${{ vars.ACR_PATH }}/${{ github.event.repository.name }}/${{ github.event.repository.name }}:${{ env.COMMIT_SHORT_SHA }}
           no-cache: true
+      
+      - name: Download Wiz CLI
+        run: curl -o wizcli https://downloads.wiz.io/v1/wizcli/latest/wizcli-linux-amd64 && chmod +x wizcli
+
+      - name: Run wiz-cli docker image scan
+        run: ./wizcli scan container-image ${{ env.COMMIT_SHORT_SHA }} --policies "$POLICY"
+
+      - name: Fetch digest of Docker image for Graph enrichment
+        env:
+          WIZ_CLIENT_ID: ${{ secrets.WIZ_CLIENT_ID }}
+          WIZ_CLIENT_SECRET: ${{ secrets.WIZ_CLIENT_SECRET }}
+        run: ./wizcli tag ${{ env.COMMIT_SHORT_SHA }}
       
       - name: Finish Image Publish
         run: |
