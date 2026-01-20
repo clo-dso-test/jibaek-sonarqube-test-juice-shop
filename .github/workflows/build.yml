@@ -21,6 +21,7 @@ jobs:
       - name : Check out repository code
         uses: actions/checkout@v4
 
+
       - name: Azure Login
         uses: Azure/login@v2.3.0
         with:
@@ -28,18 +29,22 @@ jobs:
           tenant-id: ${{ secrets.AZURE_TENANT_ID }}
           subscription-id: ${{ secrets.AZURE_SUBSCRIPTION_ID }}
 
+
       - name: 'Acr login'
         run: |
           az acr login --name jibaek
 
+
       - name: Set up Docker Buildx
         uses: docker/setup-buildx-action@v3
+
 
       - name: Set short git commit SHA
         id: vars
         run: |
           calculatedSha=$(git rev-parse --short ${{ github.sha }})
           echo "COMMIT_SHORT_SHA=$calculatedSha" >> $GITHUB_ENV
+
 
       - name: Build and push Docker image to Artifact Registry
         uses: docker/build-push-action@v5
@@ -51,8 +56,17 @@ jobs:
           tags: ${{ vars.ACR_PATH }}/${{ github.event.repository.name }}/${{ github.event.repository.name }}:${{ env.COMMIT_SHORT_SHA }}
           no-cache: true
       
+
       - name: Download Wiz CLI
         run: curl -o wizcli https://downloads.wiz.io/v1/wizcli/latest/wizcli-linux-amd64 && chmod +x wizcli
+
+
+      - name: Authenticate to Wiz
+        run: ./wizcli auth --id "$WIZ_CLIENT_ID" --secret "$WIZ_CLIENT_SECRET"
+        env:
+          WIZ_CLIENT_ID: ${{ secrets.WIZ_CLIENT_ID }}
+          WIZ_CLIENT_SECRET: ${{ secrets.WIZ_CLIENT_SECRET }}
+
 
       - name: Run wiz-cli docker image scan
         env:
@@ -60,12 +74,14 @@ jobs:
           WIZ_CLIENT_SECRET: ${{ secrets.WIZ_CLIENT_SECRET }}
         run: ./wizcli scan container-image ${{ env.COMMIT_SHORT_SHA }} --policies "$POLICY"
 
+
       - name: Fetch digest of Docker image for Graph enrichment
         env:
           WIZ_CLIENT_ID: ${{ secrets.WIZ_CLIENT_ID }}
           WIZ_CLIENT_SECRET: ${{ secrets.WIZ_CLIENT_SECRET }}
         run: ./wizcli tag ${{ env.COMMIT_SHORT_SHA }}
       
+
       - name: Finish Image Publish
         run: |
           echo "🎉 Finish Image Publish!!! 🎉"
