@@ -74,9 +74,6 @@ jobs:
 
 
       - name: Fetch digest of Docker image for Graph enrichment
-        env:
-          WIZ_CLIENT_ID: ${{ secrets.WIZ_CLIENT_ID }}
-          WIZ_CLIENT_SECRET: ${{ secrets.WIZ_CLIENT_SECRET }}
         run: ./wizcli tag ${{ vars.ACR_PATH }}/${{ github.event.repository.name }}/${{ github.event.repository.name }}:${{ env.COMMIT_SHORT_SHA }}
       
 
