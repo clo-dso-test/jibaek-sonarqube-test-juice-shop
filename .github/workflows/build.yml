@@ -55,6 +55,9 @@ jobs:
         run: curl -o wizcli https://downloads.wiz.io/v1/wizcli/latest/wizcli-linux-amd64 && chmod +x wizcli
 
       - name: Run wiz-cli docker image scan
+        env:
+          WIZ_CLIENT_ID: ${{ secrets.WIZ_CLIENT_ID }}
+          WIZ_CLIENT_SECRET: ${{ secrets.WIZ_CLIENT_SECRET }}
         run: ./wizcli scan container-image ${{ env.COMMIT_SHORT_SHA }} --policies "$POLICY"
 
       - name: Fetch digest of Docker image for Graph enrichment
