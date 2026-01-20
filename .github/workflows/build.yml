@@ -1,10 +1,9 @@
 name: Build
 
-on: 
-  workflow_run:
-    workflows: ["Analyze"]
-    types:
-      - completed
+on:
+  push:
+    branches:
+      - master
 
 jobs:
   build:
@@ -77,7 +76,7 @@ jobs:
       - name: Fetch digest of Docker image for Graph enrichment
         run: |
           ./wizcli tag ${{ vars.ACR_PATH }}/${{ github.event.repository.name }}/${{ github.event.repository.name }}:${{ env.COMMIT_SHORT_SHA }} \
-            --image-digest "${{ steps.build-image.outputs.digest }}"
+            --digest "${{ steps.build-image.outputs.digest }}"
       
 
       - name: Finish Image Publish

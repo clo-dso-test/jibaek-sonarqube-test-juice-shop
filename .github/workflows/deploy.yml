@@ -1,9 +1,5 @@
 name: Deploy
-# Trigger Condition For Testing:
-# on:
-#   push:
-#     branches:
-#       - master
+
 on: 
   workflow_run:
     workflows: ["Build"]
