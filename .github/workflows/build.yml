@@ -12,7 +12,7 @@ jobs:
     runs-on: ubuntu-latest
     env:
       SCAN_PATH: "."
-      POLICY: "Default vulnerabilities policy"
+      POLICY: "jibaek vulnerabilities policy"
     permissions:
       contents: 'read'
       id-token: 'write'
