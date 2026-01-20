@@ -51,4 +51,4 @@ jobs:
       
       - name: Finish Image Publish
         run: |
-          echo "🎉 Finish Image Publish!!!! 🎉"
+          echo "🎉 Finish Image Publish!!! 🎉"
