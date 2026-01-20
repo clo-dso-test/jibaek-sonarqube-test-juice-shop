@@ -47,6 +47,7 @@ jobs:
 
 
       - name: Build and push Docker image to Artifact Registry
+        id: build-image
         uses: docker/build-push-action@v5
         with:
           context: .
@@ -74,7 +75,9 @@ jobs:
 
 
       - name: Fetch digest of Docker image for Graph enrichment
-        run: ./wizcli tag ${{ vars.ACR_PATH }}/${{ github.event.repository.name }}/${{ github.event.repository.name }}:${{ env.COMMIT_SHORT_SHA }}
+        run: |
+          ./wizcli tag ${{ vars.ACR_PATH }}/${{ github.event.repository.name }}/${{ github.event.repository.name }}:${{ env.COMMIT_SHORT_SHA }} \
+            --image-digest "${{ steps.build-image.outputs.digest }}"
       
 
       - name: Finish Image Publish
