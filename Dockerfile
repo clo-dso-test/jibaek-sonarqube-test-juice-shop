@@ -2,19 +2,17 @@ FROM node:22-slim AS installer
 WORKDIR /juice-shop
 
 RUN apt-get update && apt-get install -y \
-    git \
-    python3 \
-    python3-dev \
-    make \
-    g++ \
-    build-essential \
+    git python3 python3-dev make g++ build-essential \
     && rm -rf /var/lib/apt/lists/*
 
 COPY package*.json ./
 
 RUN --mount=type=cache,target=/root/.npm \
-    npm install --omit=dev --unsafe-perm=true --allow-root
+    npm install --omit=dev --ignore-scripts
+
 COPY . .
+
+RUN npm rebuild && npm run postinstall || true
 RUN npm dedupe --omit=dev && \
     rm -rf frontend/node_modules frontend/.angular frontend/src/assets && \
     mkdir -p logs && \
