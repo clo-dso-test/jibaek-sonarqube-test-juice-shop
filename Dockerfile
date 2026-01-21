@@ -1,6 +1,6 @@
 FROM node:22-alpine AS installer
 WORKDIR /juice-shop
-RUN apk add --no-cache git
+RUN apk add --no-cache git build-base python3
 # package.json 과 package-lock.json 만 먼저 복사하여 의존성 설치 캐시 고정
 COPY package*.json ./
 # GH Action 용 NPM 캐시 마운트 및 의존성 설치
