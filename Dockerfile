@@ -4,14 +4,16 @@ WORKDIR /juice-shop
 RUN apt-get update && apt-get install -y \
     git \
     python3 \
+    python3-dev \
     make \
     g++ \
+    build-essential \
     && rm -rf /var/lib/apt/lists/*
-# package.json 과 package-lock.json 만 먼저 복사하여 의존성 설치 캐시 고정
+
 COPY package*.json ./
-# GH Action 용 NPM 캐시 마운트 및 의존성 설치
+
 RUN --mount=type=cache,target=/root/.npm \
-    npm install --omit=dev
+    npm install --omit=dev --unsafe-perm=true --allow-root
 COPY . .
 RUN npm dedupe --omit=dev && \
     rm -rf frontend/node_modules frontend/.angular frontend/src/assets && \
