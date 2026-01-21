@@ -4,7 +4,7 @@ WORKDIR /juice-shop
 COPY package*.json ./
 # GH Action 용 NPM 캐시 마운트 및 의존성 설치
 RUN --mount=type=cache,target=/root/.npm \
-    npm ci --omit=dev --unsafe-perm
+    npm install --omit=dev
 COPY . .
 RUN npm dedupe --omit=dev && \
     rm -rf frontend/node_modules frontend/.angular frontend/src/assets && \
