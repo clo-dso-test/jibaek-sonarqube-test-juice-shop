@@ -44,4 +44,4 @@ jobs:
 
       - name: Finish Image Deploy to Infra Repo
         run: |
-          echo "🎉 Finish Image Deploy to Infra Repo!!!!! 🎉"
+          echo "🎉 Finish Image Deploy to Infra Repo!!!! 🎉"
