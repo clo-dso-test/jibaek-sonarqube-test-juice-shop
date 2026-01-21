@@ -22,8 +22,8 @@ RUN npm dedupe --omit=dev && \
     rm data/chatbot/botDefaultTrainingData.json ftp/legal.md i18n/*.json || true
 
 ARG CYCLONEDX_NPM_VERSION=latest
-RUN npx @cyclonedx/cyclonedx-npm@$CYCLONEDX_NPM_VERSION --omit dev && \
-    npm run sbom
+RUN npm install -g @cyclonedx/cyclonedx-npm@$CYCLONEDX_NPM_VERSION
+RUN cyclonedx-npm --omit dev --output-format JSON --output-file bom.json || npm run sbom
 
 FROM gcr.io/distroless/nodejs22-debian12
 ARG BUILD_DATE
