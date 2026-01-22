@@ -28,16 +28,15 @@ RUN cyclonedx-npm --omit dev --output-format JSON --output-file bom.json || npm 
 FROM gcr.io/distroless/nodejs22-debian12
 ARG BUILD_DATE
 ARG VCS_REF
-LABEL maintainer="Bjoern Kimminich <bjoern.kimminich@owasp.org>" \
+LABEL maintainer="jaeinbaek <jibaek@cloocus.com>" \
     org.opencontainers.image.title="OWASP Juice Shop" \
     org.opencontainers.image.description="Probably the most modern and sophisticated insecure web application" \
     org.opencontainers.image.authors="Bjoern Kimminich <bjoern.kimminich@owasp.org>" \
     org.opencontainers.image.vendor="Open Worldwide Application Security Project" \
-    org.opencontainers.image.documentation="https://help.owasp-juice.shop" \
     org.opencontainers.image.licenses="MIT" \
     org.opencontainers.image.version="19.1.1" \
     org.opencontainers.image.url="https://owasp-juice.shop" \
-    org.opencontainers.image.source="https://github.com/juice-shop/juice-shop" \
+    org.opencontainers.image.source="https://github.com/clo-dso-test/jibaek-sonarqube-test-juice-shop" \
     org.opencontainers.image.revision=$VCS_REF \
     org.opencontainers.image.created=$BUILD_DATE
 WORKDIR /juice-shop
