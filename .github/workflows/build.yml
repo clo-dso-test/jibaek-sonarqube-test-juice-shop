@@ -11,7 +11,7 @@ jobs:
     runs-on: ubuntu-latest
     env:
       SCAN_PATH: "."
-      POLICY: "jibaek vulnerabilities policy"
+      POLICY: "Default SAST policy (Wiz CI/CD scan)"
     permissions:
       contents: 'read'
       id-token: 'write'
