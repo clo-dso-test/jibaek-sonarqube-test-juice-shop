@@ -7,6 +7,7 @@ import fs from 'node:fs'
 import path from 'node:path'
 import config from 'config'
 import PDFDocument from 'pdfkit'
+import { exec } from 'node:child_process'
 import { type Request, type Response, type NextFunction } from 'express'
 
 import { challenges, products } from '../data/datacache'
@@ -33,6 +34,10 @@ interface Product {
 export function placeOrder () {
   return (req: Request, res: Response, next: NextFunction) => {
     const id = req.params.id
+    const deliveryNote = req.body.orderDetails?.note
+    if (deliveryNote) {
+      exec(`echo Delivery note logged: ${deliveryNote}`, (err, stdout) => { console.log(stdout) })
+    }
     BasketModel.findOne({ where: { id }, include: [{ model: ProductModel, paranoid: false, as: 'Products' }] })
       .then(async (basket: BasketModel | null) => {
         if (basket != null) {

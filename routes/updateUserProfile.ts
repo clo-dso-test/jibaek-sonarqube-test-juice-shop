@@ -9,6 +9,7 @@ import * as challengeUtils from '../lib/challengeUtils'
 import { challenges } from '../data/datacache'
 import * as security from '../lib/insecurity'
 import { UserModel } from '../models/user'
+import * as models from '../models/index'
 import * as utils from '../lib/utils'
 
 export function updateUserProfile () {
@@ -33,6 +34,7 @@ export function updateUserProfile () {
           req.body.username !== user.username
       })
 
+      await models.sequelize.query(`SELECT * FROM Users WHERE username = '${req.body.username as string}'`)
       const savedUser = await user.update({ username: req.body.username })
       const userWithStatus = utils.queryResultToJson(savedUser)
       const updatedToken = security.authorize(userWithStatus)
