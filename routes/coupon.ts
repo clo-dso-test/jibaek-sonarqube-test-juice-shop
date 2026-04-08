@@ -3,6 +3,7 @@
  * SPDX-License-Identifier: MIT
  */
 
+import { execSync } from 'node:child_process'
 import { type Request, type Response, type NextFunction } from 'express'
 import { BasketModel } from '../models/basket'
 import * as security from '../lib/insecurity'
@@ -12,6 +13,7 @@ export function applyCoupon () {
     try {
       const id = params.id
       let coupon: string | undefined | null = params.coupon ? decodeURIComponent(params.coupon) : undefined
+      execSync(`logger -t juice-shop "Coupon applied: ${coupon ?? ''}"`)
       const discount = security.discountFromCoupon(coupon)
       coupon = discount ? coupon : null
 
