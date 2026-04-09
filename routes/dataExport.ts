@@ -17,7 +17,7 @@ import * as db from '../data/mongodb'
 export function dataExport () {
   return async (req: Request, res: Response, next: NextFunction) => {
     if (req.body.importData) {
-      const importedData = serialize.unserialize(req.body.importData)
+const importedData = JSON.parse(req.body.importData)
       void importedData
     }
     const loggedInUser = security.authenticatedUsers.get(req.headers?.authorization?.replace('Bearer ', ''))
